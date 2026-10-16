@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visual Paradigm ERD - Master Template</title>
+    <style>
+      :root {
+        --vp-bg: #ffffff;
+        --vp-card-header: #f8c985;
+        --vp-card-body: #fce6ba;
+        --vp-card-border: #1a1a1a;
+        --vp-line-color: #1a1a1a;
+        --vp-text-main: #111827;
+        --vp-pk-gold: #d97706;
+        --vp-fk-green: #059669;
+        --vp-col-blue: #0284c7;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+
+      body {
+        background: #f1f5f9;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
+      }
+
+      .diagram-viewport {
+        position: relative;
+        width: 1050px;
+        height: 650px;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+      }
+
+      /* SVG Layer for Connectors */
+      .connector-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      /* Entity Cards */
+      .vp-entity {
+        position: absolute;
+        z-index: 2;
+        background: var(--vp-card-body);
+        border: 1.5px solid var(--vp-card-border);
+        border-radius: 10px;
+        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
+        min-width: 200px;
+        font-size: 11px;
+        overflow: hidden;
+      }
+
+      .vp-header {
+        background: var(--vp-card-header);
+        padding: 5px 12px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 12px;
+        color: var(--vp-text-main);
+        border-bottom: 1.5px solid var(--vp-card-border);
+      }
+
+      .vp-body {
+        padding: 4px 0;
+      }
+
+      .vp-row {
+        display: flex;
+        align-items: center;
+        padding: 3px 8px;
+        gap: 6px;
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .vp-row:last-child {
+        border-bottom: none;
+      }
+
+      .vp-icon {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .vp-col-name {
+        font-weight: 600;
+        color: var(--vp-text-main);
+        flex: 1;
+        white-space: nowrap;
+      }
+
+      .vp-row.is-pk .vp-col-name {
+        font-weight: 700;
+      }
+
+      .vp-row.is-fk .vp-col-name {
+        font-style: italic;
+        font-weight: 700;
+      }
+
+      .vp-col-type {
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 10.5px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-left: 8px;
+        margin-right: 4px;
+        white-space: nowrap;
+      }
+
+      .vp-null-badge {
+        font-family: Georgia, serif;
+        font-size: 10px;
+        font-weight: bold;
+        border: 1px solid var(--vp-card-border);
+        padding: 0px 3px;
+        border-radius: 2px;
+        background: #ffffff;
+        color: #111827;
+        line-height: 12px;
+      }
+
+      /* Print Setup for PDF Output */
+      @media print {
+        body {
+          background: #ffffff;
+          padding: 0;
+        }
+        .diagram-viewport {
+          border: none;
+          box-shadow: none;
+          width: 100%;
+          height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="diagram-viewport" id="diagram">
+      <!-- SVG Connector Overlay -->
+      <svg class="connector-svg" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Marker: Mandatory One (||) -->
+          <marker
+            id="marker-one"
+            markerWidth="14"
+            markerHeight="14"
+            refX="7"
+            refY="7"
+            orient="auto"
+          >
+            <line
+              x1="4"
+              y1="1"
+              x2="4"
+              y2="13"
+              stroke="#1a1a1a"
+              stroke-width="1.5"
+            />
+            <line
+              x1="8"
+              y1="1"
+              x2="8"
+              y2="13"
+              stroke="#1a1a1a"
+              stroke-width="1.5"
+            />
+          </marker>
+
+          <!-- Marker: Zero or Many (>o) -->
+          <marker
+            id="marker-zero-many"
+            markerWidth="20"
+            markerHeight="16"
+            refX="18"
+            refY="8"
+            orient="auto"
+          >
+            <circle
+              cx="6"
+              cy="8"
+              r="4"
+              fill="#ffffff"
+              stroke="#1a1a1a"
+              stroke-width="1.5"
+            />
+            <path
+              d="M 12 1 L 18 8 L 12 15 M 6 8 L 18 8"
+              fill="none"
+              stroke="#1a1a1a"
+              stroke-width="1.5"
+            />
+          </marker>
+
+          <!-- Marker: One or Many (>|) -->
+          <marker
+            id="marker-one-many"
+            markerWidth="20"
+            markerHeight="16"
+            refX="18"
+            refY="8"
+            orient="auto"
+          >
+            <line
+              x1="6"
+              y1="1"
+              x2="6"
+              y2="15"
+              stroke="#1a1a1a"
+              stroke-width="1.5"
+            />
+            <path
+              d="M 12 1 L 18 8 L 12 15 M 6 8 L 18 8"
+              fill="none"
+              stroke="#1a1a1a"
+              stroke-width="1.5"
+            />
+          </marker>
+        </defs>
+
+        <!-- Sample Orthogonal Relationship Connectors -->
+        <!-- Author -> Book (Dashed Non-Identifying) -->
+        <path
+          d="M 100 135 V 180 H 130 V 220"
+          fill="none"
+          stroke="#1a1a1a"
+          stroke-width="1.5"
+          stroke-dasharray="5,4"
+          marker-start="url(#marker-one)"
+          marker-end="url(#marker-zero-many)"
+        />
+
+        <!-- Publisher -> Book (Dashed Non-Identifying) -->
+        <path
+          d="M 430 145 V 180 H 220 V 220"
+          fill="none"
+          stroke="#1a1a1a"
+          stroke-width="1.5"
+          stroke-dasharray="5,4"
+          marker-start="url(#marker-one)"
+          marker-end="url(#marker-zero-many)"
+        />
+
+        <!-- Customer -> ShoppingBasket -->
+        <path
+          d="M 870 185 V 260"
+          fill="none"
+          stroke="#1a1a1a"
+          stroke-width="1.5"
+          stroke-dasharray="5,4"
+          marker-start="url(#marker-one)"
+          marker-end="url(#marker-zero-many)"
+        />
+
+        <!-- Book <-> ShoppingBasket_Book -->
+        <path
+          d="M 285 300 H 380"
+          fill="none"
+          stroke="#1a1a1a"
+          stroke-width="1.5"
+          marker-start="url(#marker-one)"
+          marker-end="url(#marker-zero-many)"
+        />
+
+        <!-- ShoppingBasket_Book <-> ShoppingBasket -->
+        <path
+          d="M 685 300 H 780"
+          fill="none"
+          stroke="#1a1a1a"
+          stroke-width="1.5"
+          marker-start="url(#marker-zero-many)"
+          marker-end="url(#marker-one)"
+        />
+
+        <!-- Book <-> Warehouse_Book -->
+        <path
+          d="M 160 380 V 490"
+          fill="none"
+          stroke="#1a1a1a"
+          stroke-width="1.5"
+          marker-start="url(#marker-one)"
+          marker-end="url(#marker-zero-many)"
+        />
+
+        <!-- Warehouse <-> Warehouse_Book -->
+        <path
+          d="M 400 550 H 305"
+          fill="none"
+          stroke="#1a1a1a"
+          stroke-width="1.5"
+          marker-start="url(#marker-one)"
+          marker-end="url(#marker-zero-many)"
+        />
+      </svg>
+
+      <!-- ENTITY: Author -->
+      <div class="vp-entity" style="top: 25px; left: 20px; width: 220px">
+        <div class="vp-header">Author</div>
+        <div class="vp-body">
+          <div class="vp-row is-pk">
+            <span class="vp-icon">🔑</span>
+            <span class="vp-col-name">Name</span>
+            <span class="vp-col-type">varchar(255)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+          <div class="vp-row is-pk">
+            <span class="vp-icon">🔑</span>
+            <span class="vp-col-name">Address</span>
+            <span class="vp-col-type">varchar(255)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">URL</span>
+            <span class="vp-col-type">varchar(255)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENTITY: Publisher -->
+      <div class="vp-entity" style="top: 25px; left: 330px; width: 230px">
+        <div class="vp-header">Publisher</div>
+        <div class="vp-body">
+          <div class="vp-row is-pk">
+            <span class="vp-icon">🔑</span>
+            <span class="vp-col-name">Name</span>
+            <span class="vp-col-type">varchar(255)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">Address</span>
+            <span class="vp-col-type">varchar(255)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">Phone</span>
+            <span class="vp-col-type">varchar(255)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">URL</span>
+            <span class="vp-col-type">integer(10)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENTITY: Customer -->
+      <div class="vp-entity" style="top: 50px; left: 760px; width: 230px">
+        <div class="vp-header">Customer</div>
+        <div class="vp-body">
+          <div class="vp-row is-pk">
+            <span class="vp-icon">🔑</span>
+            <span class="vp-col-name">Email</span>
+            <span class="vp-col-type">varchar(255)</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">Name</span>
+            <span class="vp-col-type">varchar(255)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">Phone</span>
+            <span class="vp-col-type">varchar(255)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">Address</span>
+            <span class="vp-col-type">varchar(255)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENTITY: Book -->
+      <div class="vp-entity" style="top: 220px; left: 20px; width: 265px">
+        <div class="vp-header">Book</div>
+        <div class="vp-body">
+          <div class="vp-row is-pk">
+            <span class="vp-icon">🔑</span>
+            <span class="vp-col-name">ISBN</span>
+            <span class="vp-col-type">varchar(255)</span>
+          </div>
+          <div class="vp-row is-fk">
+            <span class="vp-icon">↪️</span>
+            <span class="vp-col-name">PublisherName</span>
+            <span class="vp-col-type">varchar(255)</span>
+          </div>
+          <div class="vp-row is-fk">
+            <span class="vp-icon">↪️</span>
+            <span class="vp-col-name">AuthorName</span>
+            <span class="vp-col-type">varchar(255)</span>
+          </div>
+          <div class="vp-row is-fk">
+            <span class="vp-icon">↪️</span>
+            <span class="vp-col-name">AuthorAddress</span>
+            <span class="vp-col-type">varchar(255)</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">Year</span>
+            <span class="vp-col-type">integer(10)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">Title</span>
+            <span class="vp-col-type">varchar(255)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">Price</span>
+            <span class="vp-col-type">numeric(19, 0)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENTITY: ShoppingBasket_Book -->
+      <div class="vp-entity" style="top: 250px; left: 380px; width: 305px">
+        <div class="vp-header">ShoppingBasket_Book</div>
+        <div class="vp-body">
+          <div class="vp-row is-pk is-fk">
+            <span class="vp-icon">↪️</span>
+            <span class="vp-col-name">ShoppingBasketID</span>
+            <span class="vp-col-type">integer(10)</span>
+          </div>
+          <div class="vp-row is-pk is-fk">
+            <span class="vp-icon">↪️</span>
+            <span class="vp-col-name">BookISBN</span>
+            <span class="vp-col-type">varchar(255)</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">Count</span>
+            <span class="vp-col-type">integer(10)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENTITY: ShoppingBasket -->
+      <div class="vp-entity" style="top: 260px; left: 780px; width: 230px">
+        <div class="vp-header">ShoppingBasket</div>
+        <div class="vp-body">
+          <div class="vp-row is-pk">
+            <span class="vp-icon">🔑</span>
+            <span class="vp-col-name">ID</span>
+            <span class="vp-col-type">integer(10)</span>
+          </div>
+          <div class="vp-row is-fk">
+            <span class="vp-icon">↪️</span>
+            <span class="vp-col-name">CustomerEmail</span>
+            <span class="vp-col-type">varchar(255)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENTITY: Warehouse_Book -->
+      <div class="vp-entity" style="top: 490px; left: 20px; width: 285px">
+        <div class="vp-header">Warehouse_Book</div>
+        <div class="vp-body">
+          <div class="vp-row is-pk is-fk">
+            <span class="vp-icon">↪️</span>
+            <span class="vp-col-name">WarehouseCode</span>
+            <span class="vp-col-type">integer(10)</span>
+          </div>
+          <div class="vp-row is-pk is-fk">
+            <span class="vp-icon">↪️</span>
+            <span class="vp-col-name">BookISBN</span>
+            <span class="vp-col-type">varchar(255)</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">Count</span>
+            <span class="vp-col-type">integer(10)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENTITY: Warehouse -->
+      <div class="vp-entity" style="top: 490px; left: 400px; width: 220px">
+        <div class="vp-header">Warehouse</div>
+        <div class="vp-body">
+          <div class="vp-row is-pk">
+            <span class="vp-icon">🔑</span>
+            <span class="vp-col-name">Code</span>
+            <span class="vp-col-type">integer(10)</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">Phone</span>
+            <span class="vp-col-type">varchar(255)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+          <div class="vp-row">
+            <span class="vp-icon">🗄️</span>
+            <span class="vp-col-name">Address</span>
+            <span class="vp-col-type">varchar(255)</span>
+            <span class="vp-null-badge">N</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
