@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Rigorous test suite for PowerOfTwoMaxHeap covering:
+ * Test suite for PowerOfTwoMaxHeap covering:
  * - Very small exponents (x = 0, unary heap)
  * - Standard exponents (x = 1, binary heap; x = 2, 4-ary heap; x = 3, 8-ary heap)
  * - Large exponents (x = 10, 1024-ary heap; x = 30; x = 31; x = 100)
@@ -60,7 +60,7 @@ public class PowerOfTwoMaxHeapTest {
         }
     }
 
-    // 1. Constructor parameter validation
+    // Constructor parameter validation
     private static void testConstructorValidation() {
         boolean caughtNegativeExp = false;
         try {
@@ -79,7 +79,7 @@ public class PowerOfTwoMaxHeapTest {
         assertTrue(caughtInvalidCap, "Non-positive capacity should throw IllegalArgumentException");
     }
 
-    // 2. x = 0 (2^0 = 1 child per parent: unary linear chain)
+    // Degree x = 0 (2^0 = 1 child per parent: unary linear chain)
     private static void testSmallExponentZero() {
         PowerOfTwoMaxHeap heap = new PowerOfTwoMaxHeap(0);
         int[] values = {10, 40, 20, 50, 30};
@@ -100,7 +100,7 @@ public class PowerOfTwoMaxHeapTest {
         assertEquals(10, prev, "Last popped element should be 10 for x=0");
     }
 
-    // 3. x = 1 (2^1 = 2 children: standard binary max heap)
+    // Degree x = 1 (2^1 = 2 children: standard binary max heap)
     private static void testBinaryHeapExponentOne() {
         PowerOfTwoMaxHeap heap = new PowerOfTwoMaxHeap(1);
         int[] values = {15, 10, 20, 8, 12, 25, 30, 5};
@@ -118,7 +118,7 @@ public class PowerOfTwoMaxHeapTest {
         assertTrue(heap.isEmpty(), "Heap should be empty after popping all elements");
     }
 
-    // 4. x = 2 (2^2 = 4 children: 4-ary heap)
+    // Degree x = 2 (2^2 = 4 children: 4-ary heap)
     private static void testFourAryHeapExponentTwo() {
         PowerOfTwoMaxHeap heap = new PowerOfTwoMaxHeap(2);
         int[] values = {3, 9, 1, 14, 27, 8, 19, 35, 2, 44, 11};
@@ -139,7 +139,7 @@ public class PowerOfTwoMaxHeapTest {
         assertEquals(values.length, count, "All elements popped for x=2");
     }
 
-    // 5. x = 3 (2^3 = 8 children: 8-ary heap)
+    // Degree x = 3 (2^3 = 8 children: 8-ary heap)
     private static void testEightAryHeapExponentThree() {
         PowerOfTwoMaxHeap heap = new PowerOfTwoMaxHeap(3);
         int[] values = {100, 25, 300, 42, 500, 12, 85, 99, 1000, 7, 55, 60, 70, 80, 90, 95, 110};
@@ -152,7 +152,7 @@ public class PowerOfTwoMaxHeapTest {
         assertEquals(300, heap.popMax(), "Third pop must be 300 for x=3");
     }
 
-    // 6. Very large exponents (x >= 30, x = 31, x = 100)
+    // Edge case: Large exponents (x >= 30, x = 31, x = 100)
     private static void testLargeExponentThirtyAndAbove() {
         int[] largeExponents = {30, 31, 32, 100};
         for (int exp : largeExponents) {
@@ -174,7 +174,7 @@ public class PowerOfTwoMaxHeapTest {
         }
     }
 
-    // 7. Duplicate values and negatives
+    // Duplicate values and signed integers
     private static void testDuplicateValues() {
         PowerOfTwoMaxHeap heap = new PowerOfTwoMaxHeap(2);
         int[] values = {7, -5, 7, 10, -5, 0, 7, 10, -20};
@@ -194,7 +194,7 @@ public class PowerOfTwoMaxHeapTest {
         assertTrue(heap.isEmpty(), "Heap should be empty after duplicates popped");
     }
 
-    // 8. Empty heap exceptions
+    // Exception handling on empty heap
     private static void testEmptyHeapExceptions() {
         PowerOfTwoMaxHeap heap = new PowerOfTwoMaxHeap(1);
         boolean caughtPop = false;
@@ -214,7 +214,7 @@ public class PowerOfTwoMaxHeapTest {
         assertTrue(caughtPeek, "Empty peek should throw IllegalStateException");
     }
 
-    // 9. Stress test: 50,000 random operations across different power values
+    // Randomized stress test: 50,000 operations across branching factors
     private static void testStressRandomCorrectness() {
         int[] exponentsToTest = {0, 1, 2, 4, 8, 30};
         Random rng = new Random(42);
@@ -246,7 +246,7 @@ public class PowerOfTwoMaxHeapTest {
         }
     }
 
-    // 10. Performance benchmark preview
+    // Empirical throughput and latency benchmark
     private static void testPerformanceComparison() {
         int operations = 100000;
         PowerOfTwoMaxHeap heap = new PowerOfTwoMaxHeap(3); // 8-ary heap

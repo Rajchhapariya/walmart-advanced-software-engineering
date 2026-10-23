@@ -101,7 +101,7 @@ def process_spreadsheets_1_and_2(
     if not os.path.exists(file_path_1):
         raise FileNotFoundError(f"File not found: {file_path_1}")
 
-    # Step 1: Ingest route lookup table from Spreadsheet 2
+    # Ingest route lookup table from Spreadsheet 2
     routes: Dict[str, Tuple[str, str]] = {}
     with open(file_path_2, mode="r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -113,7 +113,7 @@ def process_spreadsheets_1_and_2(
 
     print(f"[INFO] Loaded {len(routes)} distinct shipment routes.")
 
-    # Step 2: Aggregate line items from Spreadsheet 1
+    # Aggregate line items from Spreadsheet 1
     # Structure: shipment_items[shipment_identifier][product_name] = total_quantity
     print(f"[INFO] Aggregating product quantities from '{os.path.basename(file_path_1)}'...")
     shipment_items: Dict[str, Dict[str, int]] = defaultdict(lambda: defaultdict(int))
@@ -129,7 +129,7 @@ def process_spreadsheets_1_and_2(
 
     print(f"[INFO] Aggregated {total_raw_rows} raw unit rows across {len(shipment_items)} shipments.")
 
-    # Step 3: Insert combined shipment product records into database
+    # Insert combined shipment product records into database
     rows_inserted = 0
     for sid, products in shipment_items.items():
         if sid not in routes:
